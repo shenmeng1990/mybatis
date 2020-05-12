@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.mybatis.step02.dao.UserMapper">
+    <!-- 根据id获取用户信息 -->
+    <!--注意事项-->
+    <!--1：如果parameterType是简单类型（基础类型+String），那么#{}中可以为任意参数名称-->
+    <!--2：如果parameterType是pojo类型，那么#{}中参数名称必须与pojo的属性名对应-->
+    <!--3：如果resultType是pojo类型，那么select的列名必须与pojo的属性名对应-->
+    <select id="findUserById" parameterType="int"
+            resultType="user">
+	select * from user where id = #{id}
+    </select>
+
+    <select id="findByUserName" parameterType="string"
+            resultType="user">
+        select * from user where username like '%${value}%'
+    </select>
+
+    <select id="findByQueryVo" parameterType="queryVo"
+            resultType="user">
+        select * from user where username like '%${user.username}%'
+    </select>
+
+
+    <insert id="insertUser" parameterType="user">
+        <!-- selectKey将主键返回，需要再返回 -->
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into user(username,birthday,sex,address)
+        values(#{username},#{birthday},#{sex},#{address});
+    </insert>
+
+    <!-- 定义resultMap：将查询的列名和映射的pojo的属性名做一个对应关系 -->
+    <!--
+        type：指定查询结果要映射的pojo的类型
+        id：指定resultMap的唯一标示
+     -->
+    <resultMap type="user" id="userListResultMap">
+        <!--
+        id标签：映射查询结果的唯一列（主键列）
+            column：查询sql的列名
+            property：映射结果的属性名
+        -->
+        <id column="id_" property="id"/>
+        <!-- result标签：映射查询结果的普通列 -->
+        <result column="username_" property="username"/>
+        <result column="birthday_" property="birthday"/>
+    </resultMap>
+
+    <select id="findUserListResultMap" resultMap="userListResultMap">
+        SELECT id id_,username username_,birthday birthday_ FROM user
+    </select>
+</mapper>

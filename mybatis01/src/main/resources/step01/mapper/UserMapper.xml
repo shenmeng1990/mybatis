@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+    <!-- 根据id获取用户信息 -->
+    <!--注意事项-->
+    <!--1：如果parameterType是简单类型（基础类型+String），那么#{}中可以为任意参数名称-->
+    <!--2：如果parameterType是pojo类型，那么#{}中参数名称必须与pojo的属性名对应-->
+    <!--3：如果resultType是pojo类型，那么select的列名必须与pojo的属性名对应-->
+    <select id="findUserById" parameterType="int"
+            resultType="com.alibaba.mybatis.step01.pojo.User">
+	select * from user where id = #{id}
+    </select>
+
+</mapper>

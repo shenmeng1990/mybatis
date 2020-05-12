@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.mybatis.dao.OrderMapper">
+
+    <resultMap id="orderList" type="orderExt">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="number" property="number"/>
+        <result column="create_time" property="createTime"/>
+        <result column="note" property="note"/>
+        <association property="user" javaType="user">
+            <!-- column:user表的主键对应的列  property：user对象中id属性-->
+            <id column="id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="address" property="address"/>
+        </association>
+    </resultMap>
+
+    <select id="findOrderList" resultMap="orderList">
+       SELECT
+			o.id,
+			o.user_id,
+			o.number,
+			o.create_time,
+			o.note,
+			u.username,
+			u.address
+		FROM
+			orders o
+		JOIN `user` u ON u.id = o.user_id
+    </select>
+
+    <resultMap id="userOrderList" type="user">
+        <!-- 用户信息映射 -->
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <!-- 一对多关联映射 -->
+        <collection property="orders" ofType="order">
+            <id property="id" column="id"/>
+            <result property="userId" column="user_id"/>
+            <result property="number" column="number"/>
+            <result property="createTime" column="create_time"/>
+            <result property="note" column="note"/>
+        </collection>
+    </resultMap>
+
+    <select id="findUserOrder" resultMap="userOrderList">
+    SELECT
+        u.*,
+        o.id oid,
+        o.number,
+        o.create_time,
+        o.note
+    FROM
+        `user` u
+    LEFT JOIN orders o ON u.id = o.user_id
+    </select>
+
+</mapper>
