@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @Author shenmeng
@@ -39,5 +40,14 @@ public class TestUser {
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         User user = userMapper.getUserById(1);
         Assert.assertNotNull(user);
+    }
+
+    @Test
+    public void testGetUserByName(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        List<User> userList = userMapper.getUserByName("userName");
+        Assert.assertNotNull(userList);
+
     }
 }

@@ -8,4 +8,11 @@
 		resultType="com.alibaba.model.User">
 		SELECT * FROM user WHERE id = #{id} 
 	</select>
+
+	<select id="getUserByName" parameterType="java.lang.String"
+			resultType="com.alibaba.model.User">
+		SELECT * FROM user WHERE username like  '%${value}%'
+	</select>
+
+
 </mapper>
